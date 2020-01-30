@@ -26,5 +26,7 @@ def index():
 	for r in results:
 		print(r.nazwa_filharmonii)
 
-	
-	return render_template('index.html')
+	#zmienna przelaczajaca widok zalogowany/niezalogowany (na probe)
+	loggedin = False
+
+	return render_template('index.html', loggedin=loggedin)

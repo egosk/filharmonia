@@ -1,9 +1,40 @@
 {% extends 'base_template.html' %}
 
 {% block head %}
-<title>Moze nie az tak kiedys</title>
+<title>Moja filharmonia</title>
 {% endblock %}
 
 {% block body %}
-<h1>Heloł!</h1>
+
+{% if loggedin == True %}
+<div class="row">
+	<div class="col">
+		<div class="card">
+		  <div class="card-body">
+		    <h3 class="card-title">Pracownicy</h3>
+		    <p class="card-text">Przeglądaj dane pracowników zatrudnionych w filharmonii.</p>
+		    <a href="/pracownicy" class="btn btn-primary">Przejdź</a>
+		  </div>
+		</div>
+	</div>
+	<div class="col">
+		<div class="card">
+		  <div class="card-body">
+		    <h3 class="card-title">Instrumenty muzyczne</h3>
+		    <p class="card-text">Przeglądaj instrumenty muzyczne, które są na stanie filharmonii.</p>
+		    <a href="/instrumenty" class="btn btn-primary">Przejdź</a>
+		  </div>
+		</div>
+	</div>
+</div>
+{% else %}
+<div class="card" style="width: 18rem;">
+  <div class="card-body">
+    <h3 class="card-title">Zaloguj się</h3>
+    <p class="card-text">Zaloguj się, aby móc uzyskać dostęp do danych dotyczących filharmonii.</p>
+    <a href="/login" class="btn btn-primary">Przejdź</a>
+  </div>
+</div>
+{% endif %}
+
 {% endblock %}

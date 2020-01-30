@@ -11,6 +11,7 @@ Base = automap_base()
 Base.prepare(db.engine, reflect=True)
 Filharmonie = Base.classes.filharmonie
 Uzytkownicy = Base.classes.uzytkownicy
+Klienci = Base.classes.klienci
 
 #inny sposób na (tylko) odczyt danych z tabeli
 #filharmonie = db.Table('FILHARMONIE', db.metadata, autoload=True, autoload_with=db.engine)
@@ -35,7 +36,7 @@ def index():
 	if not session.get('logged_in'):
 		return render_template('login.html')
 	else:
-		return "Hello Boss! "
+		return render_template('profile.html')
 
 
 #umozliwia zalogowanie sie danymi uzytkownikow ktorzy sa w bazie
@@ -45,13 +46,15 @@ def do_admin_login():
 	POST_PASSWORD = str(request.form['password'])
 
 
-	query = db.session.query(Uzytkownicy).filter(Uzytkownicy.username.in_([POST_USERNAME]), Uzytkownicy.passwrd.in_([POST_PASSWORD]))
+	#query = db.session.query(Uzytkownicy).filter(Uzytkownicy.username.in_([POST_USERNAME]), Uzytkownicy.passwrd.in_([POST_PASSWORD]))
+	query = db.session.query(Klienci).filter(Klienci.login_klienta.in_([POST_USERNAME]), Klienci.haslo_klienta.in_([POST_PASSWORD]))
+
 	result = query.first()
 
 	if result:
 		session['logged_in'] = True
 	else:
-		flash('wrong password!')
+		flash('WRONG CREDENTIALS!')
 	return index()
 
 @app.route("/logout")

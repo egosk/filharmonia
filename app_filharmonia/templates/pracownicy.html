@@ -1,0 +1,56 @@
+{% extends 'base_template.html' %}
+
+{% block head %}
+<title>Moja filharmonia</title>
+{% endblock %}
+
+{% block body %}
+
+{% if loggedin == True %}
+	
+	{% if lista_pracownikow %}
+	
+		<h1>Lista pracowników</h1>
+		<br>
+		<table class="table table-striped">
+			<thead class="thead-dark">
+				<tr>
+					<th scope="col">ID</th>
+					<th scope="col">Imię</th>
+					<th scope="col">Nazwisko</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for r in lista_pracownikow %}
+					<tr>
+						<td>{{r.id_pracownika}}</td>
+						<td>{{r.imie_pracownika}}</td>
+						<td>{{r.nazwisko_pracownika}}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+
+	{% else %}
+
+		<h1>Wystąpił błąd</h1>
+		<br>
+		<h5>Nie udało się wczytać listy pracowników</h5>
+
+	{% endif %}
+
+	<br>
+	<a href="/" class="btn btn-primary" role="button">Wróć do strony głównej</button>
+
+{% else %}
+
+	<h1>Odmowa dostępu</h1>
+	<br>
+	<h5>Aby uzyskać dostęp do listy pracowników, musisz się zalogować</h5>
+
+	<br>
+	<a href="/login" class="btn btn-primary" role="button">Zaloguj się</button>
+
+{% endif %}
+
+{% endblock %}

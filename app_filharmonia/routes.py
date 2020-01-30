@@ -1,10 +1,13 @@
-from flask import render_template, url_for
+from flask import flash, redirect, render_template, request, session, abort
 from app_filharmonia import app, db
 from sqlalchemy.ext.automap import automap_base
+import os
+app.secret_key = os.urandom(12)
 
 Base = automap_base()
 Base.prepare(db.engine, reflect=True)
 Filharmonie = Base.classes.filharmonie
+Pracownicy = Base.classes.pracownicy
 
 #inny sposób na (tylko) odczyt danych z tabeli
 #filharmonie = db.Table('FILHARMONIE', db.metadata, autoload=True, autoload_with=db.engine)
@@ -27,10 +30,17 @@ def index():
 		print(r.nazwa_filharmonii)
 
 	#zmienna przelaczajaca widok zalogowany/niezalogowany (na probe)
-	loggedin = False
+	session['logged_in'] = True
 
-	return render_template('index.html', loggedin=loggedin)
+	return render_template('index.html', loggedin=session.get('logged_in'))
 
-#@app.route('/pracownicy')
+@app.route('/pracownicy')
 
-#def pracownicy():
+def pracownicy():
+
+	lista_pracownikow = db.session.query(Pracownicy).all()
+
+	for x in lista_pracownikow:
+		print(x.nazwisko_pracownika)
+
+	return render_template('pracownicy.html', loggedin=session.get('logged_in'), lista_pracownikow=lista_pracownikow)

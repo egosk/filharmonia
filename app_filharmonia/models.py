@@ -14,6 +14,7 @@ class Pracownicy(db.Model):
 	pesel_pracownika = db.Column(db.String(11), nullable=True)
 	dowod_pracownika = db.Column(db.String(9), nullable=True)
 	data_zatrudnienia = db.Column(db.DateTime, nullable=False)
+	id_filharmonii = db.Column(db.Integer, nullable=False)
 	id_stanowiska = db.Column(db.Integer, db.ForeignKey('stanowiska.id_stanowiska'), nullable=False)
 
 	def __repr__(self):

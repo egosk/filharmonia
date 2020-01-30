@@ -6,3 +6,4 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'oracle://kwilnick:kwilnick@ora3.elka.pw
 db = SQLAlchemy(app)
 
 from app_filharmonia import routes
+from app_filharmonia import models

@@ -30,3 +30,7 @@ def index():
 	loggedin = False
 
 	return render_template('index.html', loggedin=loggedin)
+
+#@app.route('/pracownicy')
+
+#def pracownicy():

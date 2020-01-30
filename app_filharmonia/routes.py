@@ -44,3 +44,21 @@ def pracownicy():
 		print(x.nazwisko_pracownika)
 
 	return render_template('pracownicy.html', loggedin=session.get('logged_in'), lista_pracownikow=lista_pracownikow)
+
+@app.route('/pracownicy/add')
+
+def pracownicy_add():
+
+	return render_template('pracownicy_add.html', loggedin=session.get('logged_in'))
+
+@app.route('/pracownicy/delete')
+
+def pracownicy_delete():
+
+	return render_template('pracownicy_delete.html', loggedin=session.get('logged_in'))
+
+@app.route('/pracownicy/modify')
+
+def pracownicy_modify():
+
+	return render_template('pracownicy_modify.html', loggedin=session.get('logged_in'))

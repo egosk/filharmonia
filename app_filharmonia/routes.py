@@ -2,9 +2,15 @@ from flask import render_template, url_for
 from app_filharmonia import app, db
 from sqlalchemy.ext.automap import automap_base
 
+from flask import Flask
+from flask import Flask, flash, redirect, render_template, request, session, abort
+import os
+app.secret_key = os.urandom(12)
+
 Base = automap_base()
 Base.prepare(db.engine, reflect=True)
 Filharmonie = Base.classes.filharmonie
+Uzytkownicy = Base.classes.uzytkownicy
 
 #inny sposób na (tylko) odczyt danych z tabeli
 #filharmonie = db.Table('FILHARMONIE', db.metadata, autoload=True, autoload_with=db.engine)
@@ -26,5 +32,30 @@ def index():
 	for r in results:
 		print(r.nazwa_filharmonii)
 
-	
-	return render_template('index.html')
+	if not session.get('logged_in'):
+		return render_template('login.html')
+	else:
+		return "Hello Boss! "
+
+
+#umozliwia zalogowanie sie danymi uzytkownikow ktorzy sa w bazie
+@app.route('/login', methods=['POST'])
+def do_admin_login():
+	POST_USERNAME = str(request.form['username'])
+	POST_PASSWORD = str(request.form['password'])
+
+
+	query = db.session.query(Uzytkownicy).filter(Uzytkownicy.username.in_([POST_USERNAME]), Uzytkownicy.passwrd.in_([POST_PASSWORD]))
+	result = query.first()
+
+	if result:
+		session['logged_in'] = True
+	else:
+		flash('wrong password!')
+	return index()
+
+@app.route("/logout")
+def logout():
+	session['logged_in'] = False
+	return index()
+

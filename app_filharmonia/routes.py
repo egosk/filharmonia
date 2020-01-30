@@ -1,18 +1,13 @@
-from flask import Flask, render_template, url_for
-from flask_sqlalchemy import SQLAlchemy
+from flask import render_template, url_for
+from app_filharmonia import app, db
 from sqlalchemy.ext.automap import automap_base
-
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'oracle://kwilnick:kwilnick@ora3.elka.pw.edu.pl:1521/ora3inf'
-db = SQLAlchemy(app)
-
-#inny sposób na (tylko) odczyt danych z tabeli
-#filharmonie = db.Table('FILHARMONIE', db.metadata, autoload=True, autoload_with=db.engine)
 
 Base = automap_base()
 Base.prepare(db.engine, reflect=True)
 Filharmonie = Base.classes.filharmonie
 
+#inny sposób na (tylko) odczyt danych z tabeli
+#filharmonie = db.Table('FILHARMONIE', db.metadata, autoload=True, autoload_with=db.engine)
 
 @app.route('/')
 
@@ -33,6 +28,3 @@ def index():
 
 	
 	return render_template('index.html')
-
-if __name__ == "__main__":
-	app.run(debug=True)

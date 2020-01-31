@@ -1,0 +1,46 @@
+{% extends 'base_template.html' %}
+
+{% block head %}
+<title>Moja filharmonia</title>
+{% endblock %}
+
+{% block body %}
+
+{% if loggedin == True %}
+	
+	<h1>Uwaga</h1>
+
+	{% if to_delete %}
+
+	<form method="POST" action="">
+	  {{ confirm.hidden_tag() }}	    	
+	 
+	  <div class="form-group">
+	  	<label>Jesteś pewien, że chcesz usunąć pracownika {{to_delete.imie_pracownika}} {{to_delete.nazwisko_pracownika }} ?</label>
+	  	<br>
+	  	{{ confirm.submit_confirm(class="btn btn-primary") }}
+	  	<a href="/pracownicy" class="btn btn-primary" role="button">Wróć do listy pracowników</a>
+	  </div>
+	</form> 
+
+	{% else %}
+	<br>
+	<h5>Wpis o podanym ID nie istnieje.</h5>
+
+	<br>
+	<a href="/pracownicy" class="btn btn-primary" role="button">Wróć do listy pracowników</a>
+
+	{% endif %}
+
+{% else %}
+
+	<h1>Odmowa dostępu</h1>
+	<br>
+	<h5>Aby uzyskać dostęp do listy pracowników, musisz się zalogować</h5>
+
+	<br>
+	<a href="/login" class="btn btn-primary" role="button">Zaloguj się</a>
+
+{% endif %}
+
+{% endblock %}

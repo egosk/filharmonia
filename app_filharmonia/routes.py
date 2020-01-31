@@ -15,7 +15,7 @@ Filharmonie = Base.classes.filharmonie
 #filharmonie = db.Table('FILHARMONIE', db.metadata, autoload=True, autoload_with=db.engine)
 
 from app_filharmonia.models import Pracownicy, Stanowiska
-from app_filharmonia.forms import PracownicyForm
+from app_filharmonia.forms import PracownicyForm, DeleteForm, ModifyForm, ConfirmDeleteForm
 
 @app.route('/')
 
@@ -36,19 +36,27 @@ def index():
 
 	#zmienna przelaczajaca widok zalogowany/niezalogowany (na probe)
 	session['logged_in'] = True
+	session['delete_id'] = -1
 
 	return render_template('index.html', loggedin=session.get('logged_in'))
 
-@app.route('/pracownicy')
+@app.route('/pracownicy', methods=['GET','POST'])
 
 def pracownicy():
 
 	lista_pracownikow = db.session.query(Pracownicy).all()
+	delete_form = DeleteForm()
+	modify_form = ModifyForm()
 
-	for x in lista_pracownikow:
-		print(x.nazwisko_pracownika)
+	if delete_form.validate_on_submit():
+		session['delete_id'] = delete_form.id_action.data
+		return redirect(url_for('pracownicy_delete'))
 
-	return render_template('pracownicy.html', loggedin=session.get('logged_in'), lista_pracownikow=lista_pracownikow)
+	if modify_form.validate_on_submit():
+		session['modify_id'] = modify_form_id_action.data
+		return redirect(url_for('pracownicy_modify'))
+
+	return render_template('pracownicy.html', loggedin=session.get('logged_in'), lista_pracownikow=lista_pracownikow, delete_form=delete_form, modify_form=modify_form)
 
 @app.route('/pracownicy/add', methods=['GET','POST'])
 
@@ -73,13 +81,21 @@ def pracownicy_add():
 
 	return render_template('pracownicy_add.html', loggedin=session.get('logged_in'), lista_stanowisk=lista_stanowisk, form=form)
 
-@app.route('/pracownicy/delete')
+@app.route('/pracownicy/delete', methods=['GET','POST'])
 
 def pracownicy_delete():
 
-	return render_template('pracownicy_delete.html', loggedin=session.get('logged_in'))
+	confirm = ConfirmDeleteForm()
+	to_delete = db.session.query(Pracownicy).get(session['delete_id'])
+	
+	if confirm.validate_on_submit():
+		db.session.query(Pracownicy).filter(Pracownicy.id_pracownika == session['delete_id']).delete(synchronize_session='evaluate')
+		db.session.commit()
+		return redirect(url_for('pracownicy'))
 
-@app.route('/pracownicy/modify')
+	return render_template('pracownicy_delete.html', loggedin=session.get('logged_in'), to_delete=to_delete, confirm=confirm)
+
+@app.route('/pracownicy/modify', methods=['GET','POST'])
 
 def pracownicy_modify():
 

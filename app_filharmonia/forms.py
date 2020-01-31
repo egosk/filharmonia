@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField
+from wtforms import StringField, SubmitField, SelectField, IntegerField
 from wtforms.validators import DataRequired, Length
 
 class PracownicyForm(FlaskForm):
@@ -13,3 +13,14 @@ class PracownicyForm(FlaskForm):
 	dowod = StringField('inputDowod', validators=[Length(max=30)])
 	stanowisko = SelectField('inputStanowisko', coerce=int)
 	submit = SubmitField('Dodaj')
+
+class DeleteForm(FlaskForm):
+	id_action = IntegerField('inputId', validators=[DataRequired()])
+	submit_action = SubmitField('Wykonaj')
+
+class ModifyForm(FlaskForm):
+	id_action = IntegerField('inputId', validators=[DataRequired()])
+	submit_action = SubmitField('Wykonaj')
+
+class ConfirmDeleteForm(FlaskForm):
+	submit_confirm = SubmitField('Tak')

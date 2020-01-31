@@ -55,9 +55,40 @@
 
 		<p>
 		  <a href="/pracownicy/add" class="btn btn-primary" role="button">Dodaj pracownika</a>
-		  <a href="/pracownicy/delete" class="btn btn-primary" role="button">Usuń pracownika</a>
-		  <a href="/pracownicy/modify" class="btn btn-primary" role="button">Modyfikuj dane pracownika</a>
+		  
+		  <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseDelete" aria-expanded="false" aria-controls="collapseDelete">Usuń pracownika</button>
+		  
+		  <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseModify" aria-expanded="false" aria-controls="collapseModify">Modyfikuj dane pracownika</button>
 		</p>
+		<div class="collapse" id="collapseDelete">
+		  <div class="card card-body">
+		    <form method="POST" action="">
+		    	{{ delete_form.hidden_tag() }}
+		    	<div class="form-group">
+		    		<label for="inputId">Wprowadź ID do usunięcia:</label>
+		    		{{ delete_form.id_action(class="form-control") }}
+		    	</div>
+		    	<div class="form-group">
+	  				{{ delete_form.submit_action(class="btn btn-primary") }}
+	  			</div>
+	  		</form>
+		  </div>
+		</div>
+
+		<div class="collapse" id="collapseModify">
+		  <div class="card card-body">
+		    <form method="POST" action="">
+		    	{{ modify_form.hidden_tag() }}
+		    	<div class="form-group">
+		    		<label for="inputId">Wprowadź ID do modyfikacji:</label>
+		    		{{ modify_form.id_action(class="form-control") }}
+		    	</div>
+		    	<div class="form-group">
+	  				{{ modify_form.submit_action(class="btn btn-primary") }}
+	  			</div>
+	  		</form>
+		  </div>
+		</div>
 
 		<!-- {% endif %} -->
 

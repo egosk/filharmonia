@@ -15,7 +15,7 @@ Filharmonie = Base.classes.filharmonie
 #filharmonie = db.Table('FILHARMONIE', db.metadata, autoload=True, autoload_with=db.engine)
 
 from app_filharmonia.models import Pracownicy, Stanowiska
-from app_filharmonia.forms import PracownicyForm, DeleteForm, ModifyForm, ConfirmDeleteForm
+from app_filharmonia.forms import *
 
 @app.route('/')
 
@@ -37,6 +37,7 @@ def index():
 	#zmienna przelaczajaca widok zalogowany/niezalogowany (na probe)
 	session['logged_in'] = True
 	session['delete_id'] = -1
+	session['modify_id'] = -1
 
 	return render_template('index.html', loggedin=session.get('logged_in'))
 
@@ -48,12 +49,12 @@ def pracownicy():
 	delete_form = DeleteForm()
 	modify_form = ModifyForm()
 
-	if delete_form.validate_on_submit():
+	if delete_form.submit_delete.data and delete_form.validate():
 		session['delete_id'] = delete_form.id_action.data
 		return redirect(url_for('pracownicy_delete'))
 
-	if modify_form.validate_on_submit():
-		session['modify_id'] = modify_form_id_action.data
+	if modify_form.submit_modify.data and modify_form.validate():
+		session['modify_id'] = modify_form.id_action.data
 		return redirect(url_for('pracownicy_modify'))
 
 	return render_template('pracownicy.html', loggedin=session.get('logged_in'), lista_pracownikow=lista_pracownikow, delete_form=delete_form, modify_form=modify_form)
@@ -79,6 +80,8 @@ def pracownicy_add():
 		#flash(f'Dodano pracownika {form.imie.data} {form.nazwisko.data}', 'success')
 		return redirect(url_for('pracownicy'))
 
+	print(form.errors)
+
 	return render_template('pracownicy_add.html', loggedin=session.get('logged_in'), lista_stanowisk=lista_stanowisk, form=form)
 
 @app.route('/pracownicy/delete', methods=['GET','POST'])
@@ -87,7 +90,7 @@ def pracownicy_delete():
 
 	confirm = ConfirmDeleteForm()
 	to_delete = db.session.query(Pracownicy).get(session['delete_id'])
-	
+
 	if confirm.validate_on_submit():
 		db.session.query(Pracownicy).filter(Pracownicy.id_pracownika == session['delete_id']).delete(synchronize_session='evaluate')
 		db.session.commit()
@@ -98,5 +101,39 @@ def pracownicy_delete():
 @app.route('/pracownicy/modify', methods=['GET','POST'])
 
 def pracownicy_modify():
+	
+	lista_stanowisk = db.session.query(Stanowiska).all()
+	
+	applymod = ApplyModifyForm()
+	to_modify = db.session.query(Pracownicy).get(session['modify_id'])
 
-	return render_template('pracownicy_modify.html', loggedin=session.get('logged_in'))
+	applymod.stanowisko.choices = [(g.id_stanowiska, g.nazwa_stanowiska) for g in lista_stanowisk]
+
+	update_dict = {}
+
+
+	if applymod.validate_on_submit():
+		if applymod.imie.data:
+			update_dict["imie_pracownika"] = applymod.imie.data
+		if applymod.nazwisko.data:
+			update_dict["nazwisko_pracownika"] = applymod.nazwisko.data
+		if applymod.ulica.data:
+			update_dict["ulica_zam_pracown"] = applymod.ulica.data
+		if applymod.numer.data:
+			update_dict["nr_budynku_zam_pracown"] = applymod.numer.data
+		if applymod.kod.data:
+			update_dict["kod_pocztowy_zam_pracown"] = applymod.kod.data
+		if applymod.miejscowosc.data:
+			update_dict["miejscowosc_zam_pracown"] = applymod.miejscowosc.data
+		if applymod.pesel.data:
+			update_dict["pesel_pracownika"] = applymod.pesel.data
+		if applymod.dowod.data:
+			update_dict["dowod_pracownika"] = applymod.dowod.data
+		# if stanowisko
+
+		db.session.query(Pracownicy).filter(Pracownicy.id_pracownika == session['modify_id']).update(update_dict, synchronize_session='evaluate')
+		db.session.commit()
+
+		return redirect(url_for('pracownicy'))
+
+	return render_template('pracownicy_modify.html', loggedin=session.get('logged_in'), to_modify=to_modify, applymod=applymod)

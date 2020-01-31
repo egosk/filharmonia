@@ -78,6 +78,14 @@
 {#		<h5>Nie udało się wczytać danych</h5>#}
 {##}
 {#	{% endif %}#}
+    {% if user.login_klienta == 'admin' %}
+        <br>
+	    <a href=/pracownicy class="btn btn-primary" role="button">Przegladaj pracownikow</a>
+        <br>
+	    <a href=/admin_view class="btn btn-primary" role="button">Przegladaj bilety</a>
+    {% endif %}
+
+
 
 	<br>
 	<a href=/logout class="btn btn-primary" role="button">Wyloguj</a>

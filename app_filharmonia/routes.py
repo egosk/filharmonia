@@ -68,7 +68,24 @@ def do_admin_login():
 	#zmienna przelaczajaca widok zalogowany/niezalogowany (na probe)
 	session['logged_in'] = True
 
-	return render_template('index.html', loggedin=session.get('logged_in'))
+	result = query.first()
+	if result and POST_USERNAME == "admin":
+		bilety = db.session.query(Bilety).all()
+		return render_template('index.html', loggedin=session.get('logged_in'))
+		#return render_template('admin_view.html', loggedin=session.get('logged_in'), bilety=bilety)
+	if result:
+		session['logged_in'] = True
+	else:
+		flash('WRONG CREDENTIALS!')
+	return index()
+
+	# if POST_USERNAME == 'admin':
+	# 	return render_template('index.html', loggedin=session.get('logged_in'))
+	# else:
+	# 	bilety = db.session.query(Bilety).filter_by(id_klienta=user_id).all()
+	# 	user = db.session.query(Klienci).filter_by(id_klienta=user_id).first()
+	#
+	# 	return render_template('profile.html', loggedin=session.get('logged_in'), bilety=bilety, user=user)
 
 @app.route('/pracownicy')
 
@@ -118,18 +135,14 @@ def pracownicy_modify():
 
 
 
-	result = query.first()
-	if result and POST_USERNAME =="admin":
-		bilety = db.session.query(Bilety).all()
-		return render_template('admin_view.html', loggedin=session.get('logged_in'), bilety=bilety)
-	if result:
-		session['logged_in'] = True
-	else:
-		flash('WRONG CREDENTIALS!')
-	return index()
+
 
 @app.route("/logout")
 def logout():
 	session['logged_in'] = False
 	return index()
 
+@app.route("/admin_view")
+def admin_view():
+	bilety = db.session.query(Bilety).all()
+	return render_template('admin_view.html', loggedin=session.get('logged_in'), bilety=bilety)

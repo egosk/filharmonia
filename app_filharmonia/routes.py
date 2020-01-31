@@ -30,15 +30,17 @@ def index():
 	#db.session.commit()
 
 	#wyswietla nazwy filharmonii w bazie (wynik w konsoli)
-	results = db.session.query(Filharmonie).all()
-	for r in results:
-		print(r.nazwa_filharmonii)
+	# results = db.session.query(Filharmonie).all()
+	# for r in results:
+	# 	print(r.nazwa_filharmonii)
 
 	if not session.get('logged_in'):
 		return render_template('login.html')
 	else:
 		bilety = db.session.query(Bilety).filter_by(id_klienta=user_id).all()
-		return render_template('profile.html', loggedin=session.get('logged_in'), bilety=bilety)
+		user = db.session.query(Klienci).filter_by(id_klienta=user_id).first()
+
+		return render_template('profile.html', loggedin=session.get('logged_in'), bilety=bilety, user=user)
 		#return render_template('dashboard.html', title='Flask-Login Tutorial.', template='dashboard-template', body="You are now logged in!")
 
 

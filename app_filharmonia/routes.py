@@ -1,3 +1,6 @@
+
+
+from flask import current_app as app
 from flask import render_template, url_for
 from app_filharmonia import app, db
 from sqlalchemy.ext.automap import automap_base
@@ -12,6 +15,9 @@ Base.prepare(db.engine, reflect=True)
 Filharmonie = Base.classes.filharmonie
 Uzytkownicy = Base.classes.uzytkownicy
 Klienci = Base.classes.klienci
+Pracownicy = Base.classes.pracownicy
+Bilety = Base.classes.bilety
+
 
 #inny sposób na (tylko) odczyt danych z tabeli
 #filharmonie = db.Table('FILHARMONIE', db.metadata, autoload=True, autoload_with=db.engine)
@@ -37,6 +43,7 @@ def index():
 		return render_template('login.html')
 	else:
 		return render_template('profile.html')
+		#return render_template('dashboard.html', title='Flask-Login Tutorial.', template='dashboard-template', body="You are now logged in!")
 
 
 #umozliwia zalogowanie sie danymi uzytkownikow ktorzy sa w bazie
@@ -46,11 +53,12 @@ def do_admin_login():
 	POST_PASSWORD = str(request.form['password'])
 
 
-	#query = db.session.query(Uzytkownicy).filter(Uzytkownicy.username.in_([POST_USERNAME]), Uzytkownicy.passwrd.in_([POST_PASSWORD]))
 	query = db.session.query(Klienci).filter(Klienci.login_klienta.in_([POST_USERNAME]), Klienci.haslo_klienta.in_([POST_PASSWORD]))
 
 	result = query.first()
-
+	if result and POST_USERNAME =="admin":
+		bilety = db.session.query(Bilety).all()
+		return render_template('admin_view.html', loggedin=session.get('logged_in'), lista_pracownikow=bilety)
 	if result:
 		session['logged_in'] = True
 	else:

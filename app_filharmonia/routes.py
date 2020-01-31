@@ -1,18 +1,20 @@
 from flask import flash, redirect, render_template, request, session, abort, url_for
 from app_filharmonia import app, db
 from sqlalchemy.ext.automap import automap_base
+from datetime import datetime
 import os
 app.secret_key = os.urandom(12)
 
 Base = automap_base()
 Base.prepare(db.engine, reflect=True)
 Filharmonie = Base.classes.filharmonie
-Pracownicy = Base.classes.pracownicy
-Stanowiska = Base.classes.stanowiska
+#Pracownicy = Base.classes.pracownicy
+#Stanowiska = Base.classes.stanowiska
 
 #inny sposób na (tylko) odczyt danych z tabeli
 #filharmonie = db.Table('FILHARMONIE', db.metadata, autoload=True, autoload_with=db.engine)
 
+from app_filharmonia.models import Pracownicy, Stanowiska
 from app_filharmonia.forms import PracownicyForm
 
 @app.route('/')
@@ -58,6 +60,14 @@ def pracownicy_add():
 	form.stanowisko.choices = [(g.id_stanowiska, g.nazwa_stanowiska) for g in lista_stanowisk]
 
 	if form.validate_on_submit():
+		to_send = Pracownicy(imie_pracownika=form.imie.data, nazwisko_pracownika=form.nazwisko.data, 
+			ulica_zam_pracown=form.ulica.data, nr_budynku_zam_pracown=form.numer.data,
+			kod_pocztowy_zam_pracown=form.kod.data, miejscowosc_zam_pracown=form.miejscowosc.data,
+			data_zatrudnienia=datetime.utcnow(), id_filharmonii='1', id_stanowiska=form.stanowisko.data)		
+
+		db.session.add(to_send)
+		db.session.commit()
+
 		#flash(f'Dodano pracownika {form.imie.data} {form.nazwisko.data}', 'success')
 		return redirect(url_for('pracownicy'))
 

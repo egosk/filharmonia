@@ -1,11 +1,42 @@
+{#{% extends 'base_template.html' %}#}
+{##}
+{#{% block head %}#}
+{#<title>Widok uzytkownika</title>#}
+{#{% endblock %}#}
+{##}
+{#{% block body %}#}
+{#    <center><h1>Hi User!</h1></center>#}
+{# <center><p>This is your profile</p></center>#}
+{##}
+{#    <br>#}
+{#	<a href="/" class="btn btn-primary" role="button">Wróć do strony głównej</a>#}
+{##}
+{#{% endblock %}#}
+
 {% extends 'base_template.html' %}
 
 {% block head %}
-<title>Widok uzytkownika</title>
+<title>Hi User</title>
 {% endblock %}
 
 {% block body %}
     <center><h1>Hi User!</h1></center>
- <center><p>This is your profile</p></center>
+
+{#{% if loggedin == True %}#}
+
+
+
+{#	{% else %}#}
+{##}
+{#		<h1>Wystąpił błąd</h1>#}
+{#		<br>#}
+{#		<h5>Nie udało się wczytać danych</h5>#}
+{##}
+{#	{% endif %}#}
+
+	<br>
+	<a href=/logout class="btn btn-primary" role="button">Wyloguj</a>
+
+
 
 {% endblock %}

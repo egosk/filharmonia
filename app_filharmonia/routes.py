@@ -58,7 +58,7 @@ def do_admin_login():
 	result = query.first()
 	if result and POST_USERNAME =="admin":
 		bilety = db.session.query(Bilety).all()
-		return render_template('admin_view.html', loggedin=session.get('logged_in'), lista_pracownikow=bilety)
+		return render_template('admin_view.html', loggedin=session.get('logged_in'), bilety=bilety)
 	if result:
 		session['logged_in'] = True
 	else:

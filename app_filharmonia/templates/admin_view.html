@@ -8,7 +8,7 @@
 
 {#{% if loggedin == True %}#}
 
-	{% if lista_pracownikow %}
+	{% if bilety %}
 
 		<h1>Sprzedane bilety</h1>
 		<br>
@@ -25,7 +25,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{% for r in lista_pracownikow %}
+				{% for r in bilety %}
 					<tr>
 						<td>{{r.id_biletu}}</td>
                         <td>{{r.data_sprzedazy}}</td>
@@ -52,7 +52,7 @@
 {#	{% endif %}#}
 
 	<br>
-	<a href="/" class="btn btn-primary" role="button">Wróć do strony głównej</a>
+	<a href=/logout class="btn btn-primary" role="button">Wyloguj</a>
 
 
 

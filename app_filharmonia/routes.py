@@ -54,7 +54,7 @@ def index():
 
 
 #umozliwia zalogowanie sie danymi uzytkownikow ktorzy sa w bazie
-@app.route('/login', methods=['GET','POST'])
+@app.route('/login', methods=['POST'])
 def do_admin_login():
 	POST_USERNAME = str(request.form['username'])
 	POST_PASSWORD = str(request.form['password'])
@@ -63,10 +63,10 @@ def do_admin_login():
 	query = db.session.query(Klienci).filter(Klienci.login_klienta.in_([POST_USERNAME]), Klienci.haslo_klienta.in_([POST_PASSWORD]))
 	user = db.session.query(Klienci).filter_by(login_klienta=POST_USERNAME).first()
 	global user_id
-	user_id = Klienci.id_klienta
+	user_id =user.id_klienta
 
 	#zmienna przelaczajaca widok zalogowany/niezalogowany (na probe)
-	#session['logged_in'] = True
+	session['logged_in'] = True
 	session['delete_id'] = -1
 	session['modify_id'] = -1
 
@@ -79,7 +79,7 @@ def do_admin_login():
 		session['logged_in'] = True
 	else:
 		flash('WRONG CREDENTIALS!')
-	return redirect(url_for('index'))
+	return index()
 
 	# if POST_USERNAME == 'admin':
 	# 	return render_template('index.html', loggedin=session.get('logged_in'))
@@ -191,7 +191,7 @@ def pracownicy_modify():
 @app.route("/logout")
 def logout():
 	session['logged_in'] = False
-	return redirect(url_for('index'))
+	return index()
 
 @app.route("/admin_view")
 def admin_view():

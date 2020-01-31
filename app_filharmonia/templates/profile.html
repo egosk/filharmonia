@@ -20,11 +20,11 @@
 {% endblock %}
 
 {% block body %}
-    <center><h1>Witaj {{user.imie_klienta}}!</h1></center>
+    <center><h1>Hi {{user.imie_klienta}}!</h1></center>
 
-    <h1>Twój profil:</h1>
+    <h1>Twoj profil:</h1>
     <h5>Login: {{user.login_klienta}}</h5>
-    <h5>Imię: {{user.imie_klienta}}</h5>
+    <h5>Imie: {{user.imie_klienta}}</h5>
     <h5>Nazwisko: {{user.nazwisko_klienta}}</h5>
     <h5>Email: {{user.email_klienta}}</h5>
 
@@ -80,13 +80,14 @@
 {#	{% endif %}#}
     {% if user.login_klienta == 'admin' %}
         <br>
-	    <a href=/pracownicy class="btn btn-primary" role="button">Przeglądaj pracowników</a>
-	    <a href=/admin_view class="btn btn-primary" role="button">Przeglądaj bilety</a>
+	    <a href=/pracownicy class="btn btn-primary" role="button">Przegladaj pracownikow</a>
+        <br>
+	    <a href=/admin_view class="btn btn-primary" role="button">Przegladaj bilety</a>
     {% endif %}
 
 
 
-	
+	<br>
 	<a href=/logout class="btn btn-primary" role="button">Wyloguj</a>
 
 

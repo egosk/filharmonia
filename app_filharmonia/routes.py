@@ -1,11 +1,5 @@
-
-
-from flask import current_app as app
-from flask import render_template, url_for
 from app_filharmonia import app, db
 from sqlalchemy.ext.automap import automap_base
-
-from flask import Flask
 from flask import Flask, flash, redirect, render_template, request, session, abort
 import os
 app.secret_key = os.urandom(12)
@@ -17,6 +11,7 @@ Uzytkownicy = Base.classes.uzytkownicy
 Klienci = Base.classes.klienci
 Pracownicy = Base.classes.pracownicy
 Bilety = Base.classes.bilety
+user_id = 1
 
 
 #inny sposób na (tylko) odczyt danych z tabeli
@@ -42,7 +37,8 @@ def index():
 	if not session.get('logged_in'):
 		return render_template('login.html')
 	else:
-		return render_template('profile.html')
+		bilety = db.session.query(Bilety).filter_by(id_klienta=user_id).all()
+		return render_template('profile.html', loggedin=session.get('logged_in'), bilety=bilety)
 		#return render_template('dashboard.html', title='Flask-Login Tutorial.', template='dashboard-template', body="You are now logged in!")
 
 
@@ -54,6 +50,11 @@ def do_admin_login():
 
 
 	query = db.session.query(Klienci).filter(Klienci.login_klienta.in_([POST_USERNAME]), Klienci.haslo_klienta.in_([POST_PASSWORD]))
+	user = db.session.query(Klienci).filter_by(login_klienta=POST_USERNAME).first()
+	global user_id
+	user_id =user.id_klienta
+
+
 
 	result = query.first()
 	if result and POST_USERNAME =="admin":

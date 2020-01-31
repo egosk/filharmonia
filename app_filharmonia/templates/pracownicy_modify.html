@@ -7,44 +7,54 @@
 {% block body %}
 
 {% if loggedin == True %}
-	
-	<h1>Dodaj pracownika</h1>
+
+	{% if to_modify %}
+
+	<h1>Modyfikuj dane pracownika {{to_modify.imie_pracownika}} {{to_modify.nazwisko_pracownika}}</h1>
 
 	<form method="POST" action="">
-	  {{ form.hidden_tag() }}
+	  {{ applymod.hidden_tag() }}
 	  <div class="form-row">
 	    <div class="form-group col-md-6">
 	    	<label for="inputImie">Imię</label>
 	    	<!-- <input id="inputImie" type="text" class="form-control" placeholder="Imię"> -->
-	    	{{ form.imie(class="form-control", placeholder="Imię") }}
+	    	{{ applymod.imie(class="form-control", placeholder=to_modify.imie_pracownika) }}
 	    </div>
 	    <div class="form-group col-md-6">
 	    	<label for="inputNazwisko">Nazwisko</label>
-	    	{{ form.nazwisko(class="form-control", placeholder="Nazwisko") }}
+	    	{{ applymod.nazwisko(class="form-control", placeholder=to_modify.nazwisko_pracownika) }}
 	    </div>
 	  </div>
 	  <label>Adres zamieszkania</label>
 	  <div class="form-row">
 	  	<div class="form-group col-md-4">
-	    	{{ form.ulica(class="form-control", placeholder="Ulica") }}
+	    	{{ applymod.ulica(class="form-control", placeholder=to_modify.ulica_zam_pracown) }}
 	    </div>
 	    <div class="form-group col-md-2">
-	    	{{ form.numer(class="form-control", placeholder="Nr budynku") }}
+	    	{{ applymod.numer(class="form-control", placeholder=to_modify.nr_budynku_zam_pracown) }}
 	    </div>
 	    <div class="form-group col-md-2">
-	    	{{ form.kod(class="form-control", placeholder="Kod pocztowy") }}
+	    	{{ applymod.kod(class="form-control", placeholder=to_modify.kod_pocztowy_zam_pracown) }}
 	    </div>
 	    <div class="form-group col-md-4">
-	    	{{ form.miejscowosc(class="form-control", placeholder="Miejscowość") }}
+	    	{{ applymod.miejscowosc(class="form-control", placeholder=to_modify.miejscowosc_zam_pracown) }}
 	    </div>
 	  </div>
 	  <div class="form-group">
 	  		<label for="inputPesel">Numer PESEL (nieobowiązkowe)</label>
-	    	{{ form.pesel(class="form-control", placeholder="xxxxxxxxxxx") }}
+	    	{% if to_modify.pesel_pracownika %}
+				{{ applymod.pesel(class="form-control", placeholder=to_modify.pesel_pracownika) }}
+			{% else %}
+				{{ applymod.pesel(class="form-control", placeholder="xxxxxxxxxxx") }}
+			{% endif %}
 	  </div>
 	  <div class="form-group">
 	    	<label for="inputDowod">Seria i numer dowodu osobistego (nieobowiązkowe)</label>
-	    	{{ form.dowod(class="form-control", placeholder="ABC123456") }}
+	    	{% if to_modify.dowod_pracownika %}
+				{{ applymod.dowod(class="form-control", placeholder=to_modify.dowod_pracownika) }}
+			{% else %}
+				{{ applymod.dowod(class="form-control", placeholder="ABC123456") }}
+			{% endif %}
 	  </div>
 	  <div class="form-group">
 	  		<label for="inputStanowisko">Stanowisko</label>
@@ -55,17 +65,23 @@
 			   	{% endfor %}
 		    </select>
 			-->
-			{{ form.stanowisko(class="form-control") }}
+			{{ applymod.stanowisko(class="form-control") }}
 	  </div>
 	  <div class="form-group">
-	  	{{ form.submit(class="btn btn-primary") }}
+	  	{{ applymod.submit_apply(class="btn btn-primary") }}
+	  	<a href="/pracownicy" class="btn btn-primary" role="button">Wróć do listy pracowników</a>
 	  </div>
 
 	</form> 
 	
+	{% else %}
+	<br>
+	<h5>Wpis o podanym ID nie istnieje.</h5>
 
 	<br>
 	<a href="/pracownicy" class="btn btn-primary" role="button">Wróć do listy pracowników</a>
+
+	{% endif %}
 
 {% else %}
 

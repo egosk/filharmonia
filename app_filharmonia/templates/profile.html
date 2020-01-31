@@ -1,0 +1,87 @@
+{#{% extends 'base_template.html' %}#}
+{##}
+{#{% block head %}#}
+{#<title>Widok uzytkownika</title>#}
+{#{% endblock %}#}
+{##}
+{#{% block body %}#}
+{#    <center><h1>Hi User!</h1></center>#}
+{# <center><p>This is your profile</p></center>#}
+{##}
+{#    <br>#}
+{#	<a href="/" class="btn btn-primary" role="button">Wróć do strony głównej</a>#}
+{##}
+{#{% endblock %}#}
+
+{% extends 'base_template.html' %}
+
+{% block head %}
+<title>Hi User</title>
+{% endblock %}
+
+{% block body %}
+    <center><h1>Hi {{user.imie_klienta}}!</h1></center>
+
+    <h1>Twoj profil:</h1>
+    <h5>Login: {{user.login_klienta}}</h5>
+    <h5>Imie: {{user.imie_klienta}}</h5>
+    <h5>Nazwisko: {{user.nazwisko_klienta}}</h5>
+    <h5>Email: {{user.email_klienta}}</h5>
+
+    <h6>W celu edycji danych skontaktuj sie z administratorem - administator@nasza_filharmonia.pl</h6>
+
+
+
+
+
+    {% if bilety %}
+
+		<h1>Twoje bilety</h1>
+		<br>
+		<table class="table" border="1">
+			<thead class="thead-dark">
+				<tr>
+					<th scope="col">ID</th>
+					<th scope="col">Data sprzedazy</th>
+					<th scope="col">Rodzaj biletu</th>
+					<th scope="col">Cena biletu</th>
+                    <th scope="col">Koncert</th>
+					<th scope="col">Klient</th>
+
+				</tr>
+			</thead>
+			<tbody>
+				{% for r in bilety %}
+					<tr>
+						<td>{{r.id_biletu}}</td>
+                        <td>{{r.data_sprzedazy}}</td>
+						<td>{{r.rodzaj_biletu}}</td>
+						<td>{{r.cena_biletu}}</td>
+                        <td>{{r.koncerty.nazwa_koncertu}}</td>
+                        <td>{{r.klienci.imie_klienta}} {{r.klienci.nazwisko_klienta}}</td>
+
+					</tr>
+
+                {% endfor %}
+        </tbody>
+		</table>
+    {% endif %}
+
+{#{% if loggedin == True %}#}
+
+
+
+{#	{% else %}#}
+{##}
+{#		<h1>Wystąpił błąd</h1>#}
+{#		<br>#}
+{#		<h5>Nie udało się wczytać danych</h5>#}
+{##}
+{#	{% endif %}#}
+
+	<br>
+	<a href=/logout class="btn btn-primary" role="button">Wyloguj</a>
+
+
+
+{% endblock %}

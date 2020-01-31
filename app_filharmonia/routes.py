@@ -1,4 +1,4 @@
-from flask import flash, redirect, render_template, request, session, abort
+from flask import flash, redirect, render_template, request, session, abort, url_for
 from app_filharmonia import app, db
 from sqlalchemy.ext.automap import automap_base
 import os
@@ -8,9 +8,12 @@ Base = automap_base()
 Base.prepare(db.engine, reflect=True)
 Filharmonie = Base.classes.filharmonie
 Pracownicy = Base.classes.pracownicy
+Stanowiska = Base.classes.stanowiska
 
 #inny sposób na (tylko) odczyt danych z tabeli
 #filharmonie = db.Table('FILHARMONIE', db.metadata, autoload=True, autoload_with=db.engine)
+
+from app_filharmonia.forms import PracownicyForm
 
 @app.route('/')
 
@@ -45,11 +48,20 @@ def pracownicy():
 
 	return render_template('pracownicy.html', loggedin=session.get('logged_in'), lista_pracownikow=lista_pracownikow)
 
-@app.route('/pracownicy/add')
+@app.route('/pracownicy/add', methods=['GET','POST'])
 
 def pracownicy_add():
 
-	return render_template('pracownicy_add.html', loggedin=session.get('logged_in'))
+	lista_stanowisk = db.session.query(Stanowiska).all()
+	form = PracownicyForm()
+
+	form.stanowisko.choices = [(g.id_stanowiska, g.nazwa_stanowiska) for g in lista_stanowisk]
+
+	if form.validate_on_submit():
+		#flash(f'Dodano pracownika {form.imie.data} {form.nazwisko.data}', 'success')
+		return redirect(url_for('pracownicy'))
+
+	return render_template('pracownicy_add.html', loggedin=session.get('logged_in'), lista_stanowisk=lista_stanowisk, form=form)
 
 @app.route('/pracownicy/delete')
 

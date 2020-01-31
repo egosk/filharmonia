@@ -1,0 +1,81 @@
+{% extends 'base_template.html' %}
+
+{% block head %}
+<title>Moja filharmonia</title>
+{% endblock %}
+
+{% block body %}
+
+{% if loggedin == True %}
+	
+	<h1>Dodaj pracownika</h1>
+
+	<form method="POST" action="">
+	  {{ form.hidden_tag() }}
+	  <div class="form-row">
+	    <div class="form-group col-md-6">
+	    	<label for="inputImie">Imię</label>
+	    	<!-- <input id="inputImie" type="text" class="form-control" placeholder="Imię"> -->
+	    	{{ form.imie(class="form-control", placeholder="Imię") }}
+	    </div>
+	    <div class="form-group col-md-6">
+	    	<label for="inputNazwisko">Nazwisko</label>
+	    	{{ form.nazwisko(class="form-control", placeholder="Nazwisko") }}
+	    </div>
+	  </div>
+	  <label>Adres zamieszkania</label>
+	  <div class="form-row">
+	  	<div class="form-group col-md-4">
+	    	{{ form.ulica(class="form-control", placeholder="Ulica") }}
+	    </div>
+	    <div class="form-group col-md-2">
+	    	{{ form.numer(class="form-control", placeholder="Nr budynku") }}
+	    </div>
+	    <div class="form-group col-md-2">
+	    	{{ form.kod(class="form-control", placeholder="Kod pocztowy") }}
+	    </div>
+	    <div class="form-group col-md-4">
+	    	{{ form.miejscowosc(class="form-control", placeholder="Miejscowość") }}
+	    </div>
+	  </div>
+	  <div class="form-group">
+	  		<label for="inputPesel">Numer PESEL (nieobowiązkowe)</label>
+	    	{{ form.pesel(class="form-control", placeholder="xxxxxxxxxxx") }}
+	  </div>
+	  <div class="form-group">
+	    	<label for="inputDowod">Seria i numer dowodu osobistego (nieobowiązkowe)</label>
+	    	{{ form.dowod(class="form-control", placeholder="ABC 123456") }}
+	  </div>
+	  <div class="form-group">
+	  		<label for="inputStanowisko">Stanowisko</label>
+			<!--
+			<select id="inputStanowisko" class="form-control">
+		    	{% for s in lista_stanowisk %}
+			    	<option>{{s.nazwa_stanowiska}}</option>
+			   	{% endfor %}
+		    </select>
+			-->
+			{{ form.stanowisko(class="form-control") }}
+	  </div>
+	  <div class="form-group">
+	  	{{ form.submit(class="btn btn-primary") }}
+	  </div>
+
+	</form> 
+	
+
+	<br>
+	<a href="/pracownicy" class="btn btn-primary" role="button">Wróć do listy pracowników</a>
+
+{% else %}
+
+	<h1>Odmowa dostępu</h1>
+	<br>
+	<h5>Aby uzyskać dostęp do listy pracowników, musisz się zalogować</h5>
+
+	<br>
+	<a href="/login" class="btn btn-primary" role="button">Zaloguj się</a>
+
+{% endif %}
+
+{% endblock %}

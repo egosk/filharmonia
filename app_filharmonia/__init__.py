@@ -7,3 +7,4 @@ db = SQLAlchemy(app)
 
 from app_filharmonia import routes
 from app_filharmonia import models
+from app_filharmonia import forms
